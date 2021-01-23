@@ -27,4 +27,4 @@ a² + b² = c²
 
 If the hypotenuse (c) is greater than our r² (1²), then this point falls outside of the area of the circle. To determine if it is within the circle, we simply add the pair of random numbers squared and determine if it's less than 1. 
 
-You can see points generated on a graph with this application [here!](https://concept-calculatepifromx.web.app/).
+You can see points generated on a graph with this application [here!](https://concept-calculatepifromx.web.app/)
