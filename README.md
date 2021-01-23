@@ -1,6 +1,6 @@
 # Concept - Calculate Pi
 
-Calculates pi given a number of random numbers between 0 and 1
+Calculates pi given a number of random numbers between -1 and 1
 
 [A video explaining this concept from Joma Tech](https://www.youtube.com/watch?v=pvimAM_SLic)
 
@@ -9,6 +9,7 @@ This firebase app demonstrates how to calculate π given a number of random pair
 We can do this by determining the area of the circle and the area of the square. 
 
 Area of a circle = πr²
+
 Area of a square = (2r)²
 
 The ratio of points within the circle should be the same as the ratio of circle area within the square, which should be pi. That's to say
