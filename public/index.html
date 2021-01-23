@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+    <!-- update the version number as needed -->
+    <script defer src="/__/firebase/8.2.4/firebase-app.js"></script>
+    <!-- include only the Firebase features as you need -->
+    <script defer src="/__/firebase/8.2.4/firebase-auth.js"></script>
+    <script defer src="/__/firebase/8.2.4/firebase-database.js"></script>
+    <script defer src="/__/firebase/8.2.4/firebase-messaging.js"></script>
+    <script defer src="/__/firebase/8.2.4/firebase-storage.js"></script>
+    <!-- initialize the SDK after all desired features are loaded -->
+    <script defer src="/__/firebase/init.js"></script>
+    <!-- Load chart.js to visualize the data we are running -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js"></script>
+
+
+    <style media="screen">
+      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
+      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
+      @media (max-width: 600px) {
+        body, #message { margin-top: 0; background: white; box-shadow: none; }
+        body { border-top: 16px solid #ffa100; }
+      }
+    </style>
+  </head>
+  <body>
+    <label for="itercount">How many times should we run this: </label>
+    <input type="number" name="itercount" value="10" id="itercount"></input>
+    <button onClick="calculatepi()">Calculate!</button>
+
+    <div id="picalculation">Pi is calculated at: </div>
+
+    <canvas id="piChart" width="400" height="400"></canvas>
+
+    <script>
+    function calculatepi() {
+      var itercount = parseInt(document.getElementById("itercount").value);
+      itercount = ((itercount == NaN)||(itercount < 1)) ? 1 : itercount // Error handling. If we cannot run at least once, set to 1. 
+      var points = [];
+      var pointswithincircle = [];
+      while (itercount > 0) { // While we have an iteration, run this. 
+          var rand1 = Math.random() * ((Math.random() < 0.5) ? -1 : 1)
+          var rand2 = Math.random() * ((Math.random() < 0.5) ? -1 : 1)
+          if ((Math.pow(rand1,2))+(Math.pow(rand2,2)) <= 1.0) { // this point would be within the circle. 
+              pointswithincircle.push({
+                x: rand1,
+                y: rand2
+              }); // Add to our variable for points within the circle
+          }
+          points.push({
+                x: rand1,
+                y: rand2
+              }); // push this point for graphing later
+          itercount--;
+      }
+      // Circle area can be calculated by doing pi*r²
+      // Square area can be calculated by doing (2*r)²
+      //
+      // Isolate pi. This will give us a result of 
+      // pi = 4 * (circlepoints/totalpoints)
+      //
+      // It is worth noting that we are calculating 4 * (circlepoints/totalpoints) and trying to get as close to pi as possible. 
+      var output = 4 * (pointswithincircle.length / points.length)
+      document.getElementById("picalculation").innerText = `Pi is calculated at: ${output}`
+
+      // Now we'll modify piChart and visualize the data!
+      var ctx = document.getElementById('piChart').getContext('2d');
+      var piChart = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Points within Circle',
+            backgroundColor: 'red',
+            data: pointswithincircle
+          },
+          {
+            label: 'All Points',
+            backgroundColor: 'blue',
+            data: points
+          }]
+        },
+        options: {
+            animation: {
+                duration: 0 // general animation time
+            },
+            hover: {
+                animationDuration: 0 // duration of animations when hovering an item
+            },
+            scales: {
+                xAxes: [{
+                    type: 'linear',
+                    position: 'bottom'
+                }]
+            }
+        }
+      })
+  }</script>
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+        // // The Firebase SDK is initialized and available here!
+        //
+        // firebase.auth().onAuthStateChanged(user => { });
+        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+        // firebase.messaging().requestPermission().then(() => { });
+        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+        //
+        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+
+        try {
+          let app = firebase.app();
+          let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof app[feature] === 'function');
+          document.getElementById('load').innerHTML = `Firebase SDK loaded with ${features.join(', ')}`;
+          var x = document.createElement("VAR");
+        } catch (e) {
+          console.error(e);
+          document.getElementById('load').innerHTML = 'Error loading the Firebase SDK, check the console.';
+        }
+      });
+    </script>
+  </body>
+</html>
